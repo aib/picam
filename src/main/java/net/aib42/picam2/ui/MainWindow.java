@@ -1,6 +1,5 @@
 package net.aib42.picam2.ui;
 
-import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -12,13 +11,12 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
+import com.example.sony.cameraremote.utils.SimpleHttpClient;
 import com.example.sony.cameraremote.utils.SimpleLiveviewSlicer;
 import com.example.sony.cameraremote.utils.SimpleLiveviewSlicer.Payload;
 
-import net.aib42.picam2.qx30.Requester;
-
 public class MainWindow implements ActionListener {
-	private SimpleLiveviewSlicer slicer;
+	private SimpleLiveviewSlicer slicer = new SimpleLiveviewSlicer();
 
 	private JPanel mainPanel = new JPanel();
 	private ImagePanel imagePanel = new ImagePanel();
@@ -44,7 +42,17 @@ public class MainWindow implements ActionListener {
 		JButton startButton = new JButton("Start");
 		startButton.setActionCommand("START");
 		startButton.addActionListener(this);
-		mainPanel.add(startButton, BorderLayout.CENTER);
+		mainPanel.add(startButton);
+
+		JButton zoomIn = new JButton("Zoom +");
+		zoomIn.setActionCommand("ZOOM-IN");
+		zoomIn.addActionListener(this);
+		mainPanel.add(zoomIn);
+
+		JButton zoomOut = new JButton("Zoom -");
+		zoomOut.setActionCommand("ZOOM-OUT");
+		zoomOut.addActionListener(this);
+		mainPanel.add(zoomOut);
 	}
 
 	public void actionPerformed(ActionEvent e) {
@@ -65,5 +73,20 @@ public class MainWindow implements ActionListener {
 				}
 			}.start();
 		}
+
+		else if (e.getActionCommand() == "ZOOM-IN") {
+			try {
+				SimpleHttpClient.httpPost("http://192.168.8.200:5000/sony/camera", "{\"id\":1,\"method\":\"actZoom\",\"params\":[\"in\",\"1shot\"],\"version\":\"1.0\"}");
+			} catch (IOException ex) {
+				ex.printStackTrace(System.err);
+			}
+		} else if (e.getActionCommand() == "ZOOM-OUT") {
+			try {
+				SimpleHttpClient.httpPost("http://192.168.8.200:5000/sony/camera", "{\"id\":1,\"method\":\"actZoom\",\"params\":[\"out\",\"1shot\"],\"version\":\"1.0\"}");
+			} catch (IOException ex) {
+				ex.printStackTrace(System.err);
+			}
+		}
+
 	}
 }
