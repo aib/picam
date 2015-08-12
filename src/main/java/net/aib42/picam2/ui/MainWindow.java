@@ -26,11 +26,11 @@ public class MainWindow implements ActionListener {
 	private ImagePanel imagePanel = new ImagePanel();
 	private JTextField urlTextField;
 	private Thread liveViewThread;
+	private boolean runThread;
 	private JButton startButton;
 
-	public MainWindow() throws IllegalStateException, IOException {
+	public MainWindow() {
 		slicer = new SimpleLiveviewSlicer();
-		slicer.open(cameraUrl + "/liveview/liveviewstream");
 
 		JFrame frame = new JFrame("picam2");
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -80,11 +80,16 @@ public class MainWindow implements ActionListener {
 		if (e.getActionCommand() == "START") {
 			if (liveViewThread == null) {
 				System.out.println("Starting live view from " + urlTextField.getText());
+				try {
+					slicer.open(cameraUrl + "/liveview/liveviewstream");
+				} catch (IOException ex) {
+					ex.printStackTrace(System.err);
+				}
 				liveViewThread = new Thread() {
 					@Override
 					public void run() {
 						try {
-							while (true) {
+							while (runThread) {
 								Payload pl = slicer.nextPayload();
 								InputStream is = new ByteArrayInputStream(pl.jpegData);
 								imagePanel.update(is);
@@ -93,14 +98,17 @@ public class MainWindow implements ActionListener {
 						} catch (IOException ex) {
 							ex.printStackTrace(System.err);
 						}
+						System.out.println("Live view stopped");
 					}
 				};
+				runThread = true;
 				liveViewThread.start();
 				startButton.setText("Stop");
 			} else {
 				System.out.println("Stopping live view");
-				//TODO
+				runThread = false;
 				liveViewThread = null;
+				slicer.close();
 				startButton.setText("Start");
 			}
 		}
