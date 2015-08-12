@@ -16,6 +16,8 @@ import com.example.sony.cameraremote.utils.SimpleLiveviewSlicer;
 import com.example.sony.cameraremote.utils.SimpleLiveviewSlicer.Payload;
 
 public class MainWindow implements ActionListener {
+	private String cameraUrl = "http://192.168.8.200:5000";
+
 	private SimpleLiveviewSlicer slicer = new SimpleLiveviewSlicer();
 
 	private JPanel mainPanel = new JPanel();
@@ -23,7 +25,7 @@ public class MainWindow implements ActionListener {
 
 	public MainWindow() throws IllegalStateException, IOException {
 		slicer = new SimpleLiveviewSlicer();
-		slicer.open("http://192.168.8.200:5000/liveview/liveviewstream");
+		slicer.open(cameraUrl + "/liveview/liveviewstream");
 
 		JFrame frame = new JFrame("picam2");
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -76,13 +78,13 @@ public class MainWindow implements ActionListener {
 
 		else if (e.getActionCommand() == "ZOOM-IN") {
 			try {
-				SimpleHttpClient.httpPost("http://192.168.8.200:5000/sony/camera", "{\"id\":1,\"method\":\"actZoom\",\"params\":[\"in\",\"1shot\"],\"version\":\"1.0\"}");
+				SimpleHttpClient.httpPost(cameraUrl + "/sony/camera", "{\"id\":1,\"method\":\"actZoom\",\"params\":[\"in\",\"1shot\"],\"version\":\"1.0\"}");
 			} catch (IOException ex) {
 				ex.printStackTrace(System.err);
 			}
 		} else if (e.getActionCommand() == "ZOOM-OUT") {
 			try {
-				SimpleHttpClient.httpPost("http://192.168.8.200:5000/sony/camera", "{\"id\":1,\"method\":\"actZoom\",\"params\":[\"out\",\"1shot\"],\"version\":\"1.0\"}");
+				SimpleHttpClient.httpPost(cameraUrl + "/sony/camera", "{\"id\":1,\"method\":\"actZoom\",\"params\":[\"out\",\"1shot\"],\"version\":\"1.0\"}");
 			} catch (IOException ex) {
 				ex.printStackTrace(System.err);
 			}
