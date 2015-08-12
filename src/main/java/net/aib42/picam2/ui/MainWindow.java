@@ -79,7 +79,8 @@ public class MainWindow implements ActionListener {
 	public void actionPerformed(ActionEvent e) {
 		if (e.getActionCommand() == "START") {
 			if (liveViewThread == null) {
-				System.out.println("Starting live view from " + urlTextField.getText());
+				cameraUrl = urlTextField.getText();
+				System.out.println("Starting live view from " + cameraUrl);
 				try {
 					slicer.open(cameraUrl + "/liveview/liveviewstream");
 				} catch (IOException ex) {
