@@ -2,7 +2,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>net.aib42.picam</groupId>
   <artifactId>picam</artifactId>
-  <version>0.0.1-SNAPSHOT</version>
+  <version>0.0.3-SNAPSHOT</version>
   <dependencies>
   	<dependency>
   		<groupId>org.apache.httpcomponents</groupId>
