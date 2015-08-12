@@ -32,7 +32,7 @@ public class MainWindow implements ActionListener {
 	public MainWindow() {
 		slicer = new SimpleLiveviewSlicer();
 
-		JFrame frame = new JFrame("picam2");
+		JFrame frame = new JFrame("picam");
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
 		setupMainPanel();
