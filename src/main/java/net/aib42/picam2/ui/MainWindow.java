@@ -11,6 +11,7 @@ import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+import javax.swing.JTextField;
 
 import com.example.sony.cameraremote.utils.SimpleHttpClient;
 import com.example.sony.cameraremote.utils.SimpleLiveviewSlicer;
@@ -23,6 +24,9 @@ public class MainWindow implements ActionListener {
 
 	private JPanel mainPanel = new JPanel();
 	private ImagePanel imagePanel = new ImagePanel();
+	private JTextField urlTextField;
+	private Thread liveViewThread;
+	private JButton startButton;
 
 	public MainWindow() throws IllegalStateException, IOException {
 		slicer = new SimpleLiveviewSlicer();
@@ -49,8 +53,12 @@ public class MainWindow implements ActionListener {
 
 	private JPanel createControls() {
 		JPanel controls = new JPanel();
+		controls.setLayout(new BoxLayout(controls, BoxLayout.LINE_AXIS));
 
-		JButton startButton = new JButton("Start");
+		urlTextField = new JTextField(cameraUrl);
+		controls.add(urlTextField);
+
+		startButton = new JButton("Start");
 		startButton.setActionCommand("START");
 		startButton.addActionListener(this);
 		controls.add(startButton);
@@ -70,21 +78,31 @@ public class MainWindow implements ActionListener {
 
 	public void actionPerformed(ActionEvent e) {
 		if (e.getActionCommand() == "START") {
-			new Thread() {
-				@Override
+			if (liveViewThread == null) {
+				System.out.println("Starting live view from " + urlTextField.getText());
+				liveViewThread = new Thread() {
+					@Override
 					public void run() {
-					try {
-						while (true) {
-							Payload pl = slicer.nextPayload();
-							InputStream is = new ByteArrayInputStream(pl.jpegData);
-							imagePanel.update(is);
-							mainPanel.repaint();
+						try {
+							while (true) {
+								Payload pl = slicer.nextPayload();
+								InputStream is = new ByteArrayInputStream(pl.jpegData);
+								imagePanel.update(is);
+								mainPanel.repaint();
+							}
+						} catch (IOException ex) {
+							ex.printStackTrace(System.err);
 						}
-					} catch (IOException ex) {
-						ex.printStackTrace(System.err);
 					}
-				}
-			}.start();
+				};
+				liveViewThread.start();
+				startButton.setText("Stop");
+			} else {
+				System.out.println("Stopping live view");
+				//TODO
+				liveViewThread = null;
+				startButton.setText("Start");
+			}
 		}
 
 		else if (e.getActionCommand() == "ZOOM-IN") {
