@@ -7,6 +7,7 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
+import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -38,23 +39,33 @@ public class MainWindow implements ActionListener {
 	}
 
 	private void setupMainPanel() {
+		mainPanel.setLayout(new BoxLayout(mainPanel, BoxLayout.PAGE_AXIS));
+
 		imagePanel.setPreferredSize(new Dimension(640, 480));
 		mainPanel.add(imagePanel);
+
+		mainPanel.add(createControls());
+	}
+
+	private JPanel createControls() {
+		JPanel controls = new JPanel();
 
 		JButton startButton = new JButton("Start");
 		startButton.setActionCommand("START");
 		startButton.addActionListener(this);
-		mainPanel.add(startButton);
+		controls.add(startButton);
 
 		JButton zoomIn = new JButton("Zoom +");
 		zoomIn.setActionCommand("ZOOM-IN");
 		zoomIn.addActionListener(this);
-		mainPanel.add(zoomIn);
+		controls.add(zoomIn);
 
 		JButton zoomOut = new JButton("Zoom -");
 		zoomOut.setActionCommand("ZOOM-OUT");
 		zoomOut.addActionListener(this);
-		mainPanel.add(zoomOut);
+		controls.add(zoomOut);
+
+		return controls;
 	}
 
 	public void actionPerformed(ActionEvent e) {
