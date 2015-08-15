@@ -3,9 +3,7 @@ package net.aib42.picam.ui;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.io.InputStream;
 
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
@@ -17,14 +15,8 @@ import net.aib42.picam.qx30.ApiRequest;
 import net.aib42.picam.qx30.ApiWrapper;
 import net.aib42.picam.qx30.LiveviewStreamer;
 
-import com.example.sony.cameraremote.utils.SimpleHttpClient;
-import com.example.sony.cameraremote.utils.SimpleLiveviewSlicer;
-import com.example.sony.cameraremote.utils.SimpleLiveviewSlicer.Payload;
-
 public class MainWindow implements ActionListener {
 	private String cameraUrl = "http://188.59.135.36:5000";
-
-	private SimpleLiveviewSlicer slicer = new SimpleLiveviewSlicer();
 
 	private JPanel mainPanel = new JPanel();
 	private LiveviewImagePanel imagePanel = new LiveviewImagePanel();
@@ -38,7 +30,6 @@ public class MainWindow implements ActionListener {
 	private ApiWrapper apiWrapper;
 
 	public MainWindow() {
-		slicer = new SimpleLiveviewSlicer();
 		requester = new LiveviewStreamer();
 		apiReq = new ApiRequest();
 		apiWrapper = new ApiWrapper();
@@ -119,7 +110,6 @@ public class MainWindow implements ActionListener {
 				runThread = false;
 				liveViewThread = null;
 				requester.stop();
-				slicer.close();
 				startButton.setText("Start");
 			}
 		}
