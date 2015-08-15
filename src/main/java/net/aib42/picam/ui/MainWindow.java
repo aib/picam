@@ -13,6 +13,8 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
+import net.aib42.picam.qx30.ApiRequest;
+import net.aib42.picam.qx30.ApiWrapper;
 import net.aib42.picam.qx30.LiveviewStreamer;
 
 import com.example.sony.cameraremote.utils.SimpleHttpClient;
@@ -30,11 +32,16 @@ public class MainWindow implements ActionListener {
 	private Thread liveViewThread;
 	private boolean runThread;
 	private JButton startButton;
+
 	private LiveviewStreamer requester;
+	private ApiRequest apiReq;
+	private ApiWrapper apiWrapper;
 
 	public MainWindow() {
 		slicer = new SimpleLiveviewSlicer();
 		requester = new LiveviewStreamer();
+		apiReq = new ApiRequest();
+		apiWrapper = new ApiWrapper();
 
 		JFrame frame = new JFrame("picam");
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -118,13 +125,13 @@ public class MainWindow implements ActionListener {
 
 		else if (e.getActionCommand() == "ZOOM-IN") {
 			try {
-				SimpleHttpClient.httpPost(cameraUrl + "/sony/camera", "{\"id\":1,\"method\":\"actZoom\",\"params\":[\"in\",\"1shot\"],\"version\":\"1.0\"}");
+				apiWrapper.makeRequest(cameraUrl, apiReq.zoomIn());
 			} catch (IOException ex) {
 				ex.printStackTrace(System.err);
 			}
 		} else if (e.getActionCommand() == "ZOOM-OUT") {
 			try {
-				SimpleHttpClient.httpPost(cameraUrl + "/sony/camera", "{\"id\":1,\"method\":\"actZoom\",\"params\":[\"out\",\"1shot\"],\"version\":\"1.0\"}");
+				apiWrapper.makeRequest(cameraUrl, apiReq.zoomOut());
 			} catch (IOException ex) {
 				ex.printStackTrace(System.err);
 			}
