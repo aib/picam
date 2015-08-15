@@ -118,6 +118,7 @@ public class MainWindow implements ActionListener {
 				System.out.println("Stopping live view");
 				runThread = false;
 				liveViewThread = null;
+				requester.stop();
 				slicer.close();
 				startButton.setText("Start");
 			}
