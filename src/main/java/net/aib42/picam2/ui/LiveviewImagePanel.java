@@ -2,18 +2,21 @@ package net.aib42.picam2.ui;
 
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.io.InputStream;
 
 import javax.imageio.ImageIO;
 import javax.swing.JPanel;
 
+import net.aib42.picam.qx30.LiveviewStreamer;
+
 @SuppressWarnings("serial")
-public class ImagePanel extends JPanel {
+public class LiveviewImagePanel extends JPanel {
 	BufferedImage image;
 
-	protected void update(InputStream is) throws IOException {
-		image = ImageIO.read(is);
+	protected void update(LiveviewStreamer lvs) throws IOException {
+		byte[] jpegBytes = lvs.getNextJpegBytes();
+		image = ImageIO.read(new ByteArrayInputStream(jpegBytes));
 	}
 
 	@Override
