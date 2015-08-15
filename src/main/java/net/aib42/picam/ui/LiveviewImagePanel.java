@@ -1,4 +1,4 @@
-package net.aib42.picam2.ui;
+package net.aib42.picam.ui;
 
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;

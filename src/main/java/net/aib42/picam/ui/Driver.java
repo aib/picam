@@ -1,4 +1,4 @@
-package net.aib42.picam2.ui;
+package net.aib42.picam.ui;
 
 public class Driver {
 	public static void main(String[] args) {

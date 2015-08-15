@@ -1,4 +1,4 @@
-package net.aib42.picam2.ui;
+package net.aib42.picam.ui;
 
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
@@ -13,24 +13,28 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
+import net.aib42.picam.qx30.LiveviewStreamer;
+
 import com.example.sony.cameraremote.utils.SimpleHttpClient;
 import com.example.sony.cameraremote.utils.SimpleLiveviewSlicer;
 import com.example.sony.cameraremote.utils.SimpleLiveviewSlicer.Payload;
 
 public class MainWindow implements ActionListener {
-	private String cameraUrl = "http://192.168.8.200:5000";
+	private String cameraUrl = "http://188.59.135.36:5000";
 
 	private SimpleLiveviewSlicer slicer = new SimpleLiveviewSlicer();
 
 	private JPanel mainPanel = new JPanel();
-	private ImagePanel imagePanel = new ImagePanel();
+	private LiveviewImagePanel imagePanel = new LiveviewImagePanel();
 	private JTextField urlTextField;
 	private Thread liveViewThread;
 	private boolean runThread;
 	private JButton startButton;
+	private LiveviewStreamer requester;
 
 	public MainWindow() {
 		slicer = new SimpleLiveviewSlicer();
+		requester = new LiveviewStreamer();
 
 		JFrame frame = new JFrame("picam");
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -82,7 +86,7 @@ public class MainWindow implements ActionListener {
 				cameraUrl = urlTextField.getText();
 				System.out.println("Starting live view from " + cameraUrl);
 				try {
-					slicer.open(cameraUrl + "/liveview/liveviewstream");
+					requester.start(cameraUrl);
 				} catch (IOException ex) {
 					ex.printStackTrace(System.err);
 				}
@@ -91,9 +95,7 @@ public class MainWindow implements ActionListener {
 					public void run() {
 						try {
 							while (runThread) {
-								Payload pl = slicer.nextPayload();
-								InputStream is = new ByteArrayInputStream(pl.jpegData);
-								imagePanel.update(is);
+								imagePanel.update(requester);
 								mainPanel.repaint();
 							}
 						} catch (IOException ex) {
