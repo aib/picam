@@ -4,7 +4,7 @@ import java.util.Arrays;
 import java.util.List;
 
 public class ApiRequest {
-	private static final String CAMERA_ENDPOINT = "camera";
+	private static final String CAMERA_ENDPOINT = "sony/camera";
 
 	private String version = "1.0";
 	private int id = 1;
