@@ -20,8 +20,10 @@ class LiveviewLimiter(object):
 		div = int(div)
 		h = urllib2.urlopen(target)
 
-		frame = 1
+		frame = 0
 		while True:
+			frame = frame + 1
+
 			(data,) = read_one_frame(h)
 			size_str = struct.pack('!I', len(data))
 
@@ -29,8 +31,6 @@ class LiveviewLimiter(object):
 				continue
 
 			yield (size_str + data)
-
-			frame = frame + 1
 	lv._cp_config = {'response.stream': True}
 
 def read_one_frame(handle):
