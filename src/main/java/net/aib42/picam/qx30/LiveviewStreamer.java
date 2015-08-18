@@ -2,6 +2,7 @@ package net.aib42.picam.qx30;
 import java.io.IOException;
 import java.io.InputStream;
 
+import net.aib42.util.bits.NetworkByteOrder;
 import net.aib42.util.stream.InputStreamBlockingReader;
 
 import org.apache.http.HttpResponse;
@@ -45,10 +46,7 @@ public class LiveviewStreamer {
 		isReader.read(commonHeader);
 		isReader.read(payloadHeader);
 
-		int dataSize =
-			(((int) (payloadHeader[4] & 0xFF)) << 16) +
-			(((int) (payloadHeader[5] & 0xFF)) << 8) +
-			(((int) (payloadHeader[6] & 0xFF)) << 0);
+		int dataSize = NetworkByteOrder.bytesToInt((byte) 0, payloadHeader[4], payloadHeader[5], payloadHeader[6]);
 		int paddingSize = payloadHeader[7] & 0xFF;
 
 		byte[] data = new byte[dataSize];
