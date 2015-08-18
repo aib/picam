@@ -15,6 +15,8 @@ public class MainWindow implements ActionListener {
 	private MainApp mainApp;
 
 	private JTextField urlTextField;
+	private JButton recordButton;
+	private boolean recording;
 
 	public MainWindow(MainApp mainApp) {
 		this.mainApp = mainApp;
@@ -78,7 +80,23 @@ public class MainWindow implements ActionListener {
 		zoomOut.addActionListener(this);
 		controls.add(zoomOut);
 
+		recordButton = new JButton();
+		updateRecordButton();
+		recordButton.setActionCommand("RECORD");
+		recordButton.addActionListener(this);
+		controls.add(recordButton);
+
 		return controls;
+	}
+
+	private void updateRecordButton() {
+		if (recording) {
+//			recordButton.setText("\u23f9 STOP");
+			recordButton.setText("\u25fc STOP");
+		} else {
+//			recordButton.setText("\u23fa RECORD");
+			recordButton.setText("\u26ab RECORD");
+		}
 	}
 
 	public void actionPerformed(ActionEvent e) {
@@ -92,6 +110,17 @@ public class MainWindow implements ActionListener {
 
 		else if (e.getActionCommand() == "ZOOM-OUT") {
 			mainApp.zoomOut();
+		}
+
+		else if (e.getActionCommand() == "RECORD") {
+			if (!recording) {
+				mainApp.startRecording();
+				recording = true;
+			} else {
+				mainApp.stopRecording();
+				recording = false;
+			}
+			updateRecordButton();
 		}
 	}
 }
