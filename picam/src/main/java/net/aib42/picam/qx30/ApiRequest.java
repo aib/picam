@@ -51,6 +51,10 @@ public class ApiRequest {
 		return createRequest(CAMERA_ENDPOINT, createBody("1.0", "actZoom", asParams("out", "1shot")));
 	}
 
+	public Request setShootMode(String shootMode) {
+		return createRequest(CAMERA_ENDPOINT, createBody("1.0", "setShootMode", asParams(shootMode)));
+	}
+
 	public Request startRecording() {
 		return createRequest(CAMERA_ENDPOINT, createBody("1.0", "startMovieRec", asParams()));
 	}
