@@ -17,15 +17,26 @@ public class LiveviewPanel extends JPanel implements ActionListener {
 	private MainApp mainApp;
 	private String functionName;
 
+	private LiveviewStreamer streamer;
+	private Thread liveViewThread;
+	private boolean runThread;
+	private boolean liveviewStarted = false;
+
 	private LiveviewImagePanel liveviewImagePanel;
 	private JButton startButton;
-
-	private boolean liveviewStarted = false;
 
 	public LiveviewPanel(MainApp mainApp, String functionName) {
 		this.mainApp = mainApp;
 		this.functionName = functionName;
 
+		streamer = new LiveviewStreamer();
+		liveViewThread = null;
+		runThread = false;
+
+		setupPanel();
+	}
+
+	private void setupPanel() {
 		setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
 
 		liveviewImagePanel = new LiveviewImagePanel();
@@ -61,16 +72,36 @@ public class LiveviewPanel extends JPanel implements ActionListener {
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		if (e.getActionCommand() == "START") {
-			if (!liveviewStarted) {
-				mainApp.startLiveview(new MainApp.LiveviewUpdater() {
+			if (liveviewStarted == false) {
+				System.out.println("Starting live view from " + mainApp.getCameraUrl());
+				try {
+					streamer.start(mainApp.getCameraUrl(), functionName);
+				} catch (IOException ex) {
+					ex.printStackTrace(System.err);
+				}
+
+				liveViewThread = new Thread() {
 					@Override
-					public void update(LiveviewStreamer streamer) throws IOException {
-						liveviewImagePanel.update(streamer);
+					public void run() {
+						try {
+							while (runThread) {
+								liveviewImagePanel.update(streamer);
+							}
+						} catch (IOException ex) {
+							ex.printStackTrace(System.err);
+						}
+						System.out.println("Live view stopped");
 					}
-				}, functionName);
+				};
+
+				runThread = true;
+				liveViewThread.start();
 				liveviewStarted = true;
 			} else {
-				mainApp.stopLiveview();
+				System.out.println("Stopping live view");
+				runThread = false;
+				liveViewThread = null;
+				streamer.stop();
 				liveviewStarted = false;
 			}
 			updateStartButton();
