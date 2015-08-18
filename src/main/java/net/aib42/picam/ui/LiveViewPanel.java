@@ -15,14 +15,16 @@ import net.aib42.picam.qx30.LiveviewStreamer;
 @SuppressWarnings("serial")
 public class LiveViewPanel extends JPanel implements ActionListener {
 	private MainApp mainApp;
+	private String functionName;
 
 	private LiveviewImagePanel liveviewImagePanel;
 	private JButton startButton;
 
 	private boolean liveviewStarted = false;
 
-	public LiveViewPanel(MainApp mainApp) {
+	public LiveViewPanel(MainApp mainApp, String functionName) {
 		this.mainApp = mainApp;
+		this.functionName = functionName;
 
 		setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
 
@@ -65,7 +67,7 @@ public class LiveViewPanel extends JPanel implements ActionListener {
 					public void update(LiveviewStreamer streamer) throws IOException {
 						liveviewImagePanel.update(streamer);
 					}
-				}, "lv");
+				}, functionName);
 				liveviewStarted = true;
 			} else {
 				mainApp.stopLiveview();

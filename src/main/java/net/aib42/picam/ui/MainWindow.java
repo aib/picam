@@ -33,7 +33,7 @@ public class MainWindow implements ActionListener {
 		mainPanel.setLayout(new BoxLayout(mainPanel, BoxLayout.PAGE_AXIS));
 
 		mainPanel.add(setupUrlPanel());
-		mainPanel.add(new LiveViewPanel(mainApp));
+		mainPanel.add(new LiveViewPanel(mainApp, "lv"));
 
 		return mainPanel;
 	}
