@@ -1,9 +1,7 @@
 package net.aib42.picam.ui;
 
-import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.IOException;
 
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
@@ -12,96 +10,52 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 
 import net.aib42.picam.MainApp;
-import net.aib42.picam.qx30.LiveviewStreamer;
 
 public class MainWindow implements ActionListener {
 	private MainApp mainApp;
 
-	private LiveviewImagePanel liveviewImagePanel;
 	private JTextField urlTextField;
-	private JButton startButton;
-
-	private boolean liveviewStarted = false;
 
 	public MainWindow(MainApp mainApp) {
 		this.mainApp = mainApp;
 
-		JFrame frame = new JFrame("picam");
+		JFrame frame = new JFrame("picam v" + mainApp.getVersionString());
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-		frame.getContentPane().add(setupLiveviewPanel());
+		frame.getContentPane().add(setupMainPanel());
 
 		frame.pack();
 		frame.setVisible(true);
 	}
 
-	private JPanel setupLiveviewPanel() {
-		JPanel liveviewPanel = new JPanel();
-		liveviewPanel.setLayout(new BoxLayout(liveviewPanel, BoxLayout.PAGE_AXIS));
+	private JPanel setupMainPanel() {
+		JPanel mainPanel = new JPanel();
+		mainPanel.setLayout(new BoxLayout(mainPanel, BoxLayout.PAGE_AXIS));
 
-		liveviewImagePanel = new LiveviewImagePanel();
-		liveviewImagePanel.setPreferredSize(new Dimension(640, 480));
-		liveviewPanel.add(liveviewImagePanel);
-		liveviewPanel.add(setupLiveviewControls());
+		mainPanel.add(setupUrlPanel());
+		mainPanel.add(new LiveViewPanel(mainApp));
 
-		return liveviewPanel;
+		return mainPanel;
 	}
 
-	private JPanel setupLiveviewControls() {
-		JPanel controls = new JPanel();
-		controls.setLayout(new BoxLayout(controls, BoxLayout.LINE_AXIS));
+	private JPanel setupUrlPanel() {
+		JPanel urlPanel = new JPanel();
+		urlPanel.setLayout(new BoxLayout(urlPanel, BoxLayout.LINE_AXIS));
 
 		urlTextField = new JTextField(mainApp.getCameraUrl());
-		controls.add(urlTextField);
+		urlPanel.add(urlTextField);
 
-		startButton = new JButton();
-		updateStartButton();
-		startButton.setActionCommand("START");
-		startButton.addActionListener(this);
-		controls.add(startButton);
+		JButton urlSetButton = new JButton("Set");
+		urlSetButton.setActionCommand("SET-URL");
+		urlSetButton.addActionListener(this);
+		urlPanel.add(urlSetButton);
 
-		JButton zoomIn = new JButton("Zoom +");
-		zoomIn.setActionCommand("ZOOM-IN");
-		zoomIn.addActionListener(this);
-		controls.add(zoomIn);
-
-		JButton zoomOut = new JButton("Zoom -");
-		zoomOut.setActionCommand("ZOOM-OUT");
-		zoomOut.addActionListener(this);
-		controls.add(zoomOut);
-
-		return controls;
+		return urlPanel;
 	}
 
 	public void actionPerformed(ActionEvent e) {
-		mainApp.setCameraUrl(urlTextField.getText());
-
-		if (e.getActionCommand() == "START") {
-			if (!liveviewStarted) {
-				mainApp.startLiveview(new MainApp.LiveviewUpdater() {
-					@Override
-					public void update(LiveviewStreamer streamer) throws IOException {
-						liveviewImagePanel.update(streamer);
-					}
-				});
-				liveviewStarted = true;
-			} else {
-				mainApp.stopLiveview();
-				liveviewStarted = false;
-			}
-			updateStartButton();
-		} else if (e.getActionCommand() == "ZOOM-IN") {
-			mainApp.zoomIn();
-		} else if (e.getActionCommand() == "ZOOM-OUT") {
-			mainApp.zoomOut();
-		}
-	}
-
-	private void updateStartButton() {
-		if (liveviewStarted) {
-			startButton.setText("Stop");
-		} else {
-			startButton.setText("Start");
+		if (e.getActionCommand() == "SET-URL") {
+			mainApp.setCameraUrl(urlTextField.getText());
 		}
 	}
 }
