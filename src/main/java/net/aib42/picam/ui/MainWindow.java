@@ -82,7 +82,6 @@ public class MainWindow implements ActionListener {
 					@Override
 					public void update(LiveviewStreamer streamer) throws IOException {
 						liveviewImagePanel.update(streamer);
-						//TODO repaint?
 					}
 				});
 				liveviewStarted = true;
