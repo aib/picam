@@ -51,6 +51,13 @@ public class ApiRequest {
 		return createRequest(CAMERA_ENDPOINT, createBody("1.0", "actZoom", asParams("out", "1shot")));
 	}
 
+	public Request startRecording() {
+		return createRequest(CAMERA_ENDPOINT, createBody("1.0", "startMovieRec", asParams()));
+	}
+
+	public Request stopRecording() {
+		return createRequest(CAMERA_ENDPOINT, createBody("1.0", "stopMovieRec", asParams()));
+	}
 	public Request getContentList(int startIndex) {
 		Map<String, Object> params = new HashMap<String, Object>();
 		params.put("uri", "storage:memoryCard1");
