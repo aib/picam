@@ -71,7 +71,9 @@ def wrap_data(data):
 	return header + data
 
 def read_one_video_frame(handle):
-	return ''
+	(_, frame_data) = handle.read()
+	data = cv2.imencode('.jpg', frame_data)[1].tostring()
+	return data
 
 def read_one_sony_frame(handle):
 	common_header = handle.read(8)
