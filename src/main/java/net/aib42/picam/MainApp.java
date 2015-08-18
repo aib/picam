@@ -42,4 +42,20 @@ public class MainApp {
 			ex.printStackTrace(System.err);
 		}
 	}
+
+	public void startRecording() {
+		try {
+			apiWrapper.makeRequest(cameraUrl, apiReq.startRecording());
+		} catch (IOException ex) {
+			ex.printStackTrace(System.err);
+		}
+	}
+
+	public void stopRecording() {
+		try {
+			apiWrapper.makeRequest(cameraUrl, apiReq.stopRecording());
+		} catch (IOException ex) {
+			ex.printStackTrace(System.err);
+		}
+	}
 }
