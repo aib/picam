@@ -17,8 +17,7 @@ import net.aib42.picam.qx30.LiveviewStreamer;
 public class MainWindow implements ActionListener {
 	private MainApp mainApp;
 
-	private JPanel mainPanel = new JPanel();
-	private LiveviewImagePanel imagePanel = new LiveviewImagePanel();
+	private LiveviewImagePanel liveviewImagePanel;
 	private JTextField urlTextField;
 	private JButton startButton;
 
@@ -30,23 +29,25 @@ public class MainWindow implements ActionListener {
 		JFrame frame = new JFrame("picam");
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-		setupMainPanel();
-		frame.getContentPane().add(mainPanel);
+		frame.getContentPane().add(setupLiveviewPanel());
 
 		frame.pack();
 		frame.setVisible(true);
 	}
 
-	private void setupMainPanel() {
-		mainPanel.setLayout(new BoxLayout(mainPanel, BoxLayout.PAGE_AXIS));
+	private JPanel setupLiveviewPanel() {
+		JPanel liveviewPanel = new JPanel();
+		liveviewPanel.setLayout(new BoxLayout(liveviewPanel, BoxLayout.PAGE_AXIS));
 
-		imagePanel.setPreferredSize(new Dimension(640, 480));
-		mainPanel.add(imagePanel);
+		liveviewImagePanel = new LiveviewImagePanel();
+		liveviewImagePanel.setPreferredSize(new Dimension(640, 480));
+		liveviewPanel.add(liveviewImagePanel);
+		liveviewPanel.add(setupLiveviewControls());
 
-		mainPanel.add(createControls());
+		return liveviewPanel;
 	}
 
-	private JPanel createControls() {
+	private JPanel setupLiveviewControls() {
 		JPanel controls = new JPanel();
 		controls.setLayout(new BoxLayout(controls, BoxLayout.LINE_AXIS));
 
@@ -80,8 +81,8 @@ public class MainWindow implements ActionListener {
 				mainApp.startLiveview(new MainApp.LiveviewUpdater() {
 					@Override
 					public void update(LiveviewStreamer streamer) throws IOException {
-						imagePanel.update(streamer);
-						mainPanel.repaint();
+						liveviewImagePanel.update(streamer);
+						//TODO repaint?
 					}
 				});
 				liveviewStarted = true;
