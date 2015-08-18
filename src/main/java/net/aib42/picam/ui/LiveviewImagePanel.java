@@ -17,6 +17,7 @@ public class LiveviewImagePanel extends JPanel {
 	protected void update(LiveviewStreamer lvs) throws IOException {
 		LiveviewStreamer.JpegPayload payload = lvs.getNextJpeg();
 		image = ImageIO.read(new ByteArrayInputStream(payload.bytes));
+		System.out.println("Lag: " + (lvs.getLag(payload.timestamp) / 1000.0));
 		repaint();
 	}
 
