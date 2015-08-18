@@ -8,6 +8,8 @@ _logger.info("Initializing")
 import struct
 import urllib2
 import sys
+import time
+
 import cherrypy
 import cv2
 
@@ -30,13 +32,11 @@ class LiveviewLimiter(object):
 				frame = frame + 1
 
 				data = read_one_video_frame(cam)
-				(ret, frame_data) = cam.read()
-				size_str = struct.pack('!II', 0, len(data))
 
 				if frame % div != 0:
 					continue;
 
-				yield (size_str + data)
+				yield wrap_data(data)
 		finally:
 			_logger.debug("Closing video capture stream %i", target)
 			cam.release()
@@ -55,16 +55,20 @@ class LiveviewLimiter(object):
 				frame = frame + 1
 
 				data = read_one_sony_frame(handle)
-				size_str = struct.pack('!II', timestamp, len(data))
 
 				if frame % div != 0:
 					continue
 
-				yield (size_str + data)
+				yield wrap_data(data)
 		finally:
 			_logger.debug("Closing stream to %s", target)
 			handle.close()
 	lv._cp_config = {'response.stream': True}
+
+def wrap_data(data):
+	timestamp = int(time.time() * 1000)
+	header = struct.pack('!QI', timestamp, len(data))
+	return header + data
 
 def read_one_video_frame(handle):
 	return ''
