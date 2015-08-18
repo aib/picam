@@ -33,9 +33,19 @@ public class MainWindow implements ActionListener {
 		mainPanel.setLayout(new BoxLayout(mainPanel, BoxLayout.PAGE_AXIS));
 
 		mainPanel.add(setupUrlPanel());
-		mainPanel.add(new LiveviewPanel(mainApp, "lv"));
+		mainPanel.add(setupViewPanel());
 
 		return mainPanel;
+	}
+
+	private JPanel setupViewPanel() {
+		JPanel viewPanel = new JPanel();
+		viewPanel.setLayout(new BoxLayout(viewPanel, BoxLayout.LINE_AXIS));
+
+		viewPanel.add(new LiveviewPanel(mainApp, "lv"));
+		viewPanel.add(new LiveviewPanel(mainApp, "vc"));
+
+		return viewPanel;
 	}
 
 	private JPanel setupUrlPanel() {
