@@ -11,28 +11,21 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
-import net.aib42.picam.qx30.ApiRequest;
-import net.aib42.picam.qx30.ApiWrapper;
+import net.aib42.picam.MainApp;
 import net.aib42.picam.qx30.LiveviewStreamer;
 
 public class MainWindow implements ActionListener {
-	private String cameraUrl = "http://188.59.135.36:5000";
+	private MainApp mainApp;
 
 	private JPanel mainPanel = new JPanel();
 	private LiveviewImagePanel imagePanel = new LiveviewImagePanel();
 	private JTextField urlTextField;
-	private Thread liveViewThread;
-	private boolean runThread;
 	private JButton startButton;
 
-	private LiveviewStreamer requester;
-	private ApiRequest apiReq;
-	private ApiWrapper apiWrapper;
+	private boolean liveviewStarted = false;
 
-	public MainWindow() {
-		requester = new LiveviewStreamer();
-		apiReq = new ApiRequest();
-		apiWrapper = new ApiWrapper();
+	public MainWindow(MainApp mainApp) {
+		this.mainApp = mainApp;
 
 		JFrame frame = new JFrame("picam");
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -57,10 +50,11 @@ public class MainWindow implements ActionListener {
 		JPanel controls = new JPanel();
 		controls.setLayout(new BoxLayout(controls, BoxLayout.LINE_AXIS));
 
-		urlTextField = new JTextField(cameraUrl);
+		urlTextField = new JTextField(mainApp.getCameraUrl());
 		controls.add(urlTextField);
 
-		startButton = new JButton("Start");
+		startButton = new JButton();
+		updateStartButton();
 		startButton.setActionCommand("START");
 		startButton.addActionListener(this);
 		controls.add(startButton);
@@ -79,54 +73,35 @@ public class MainWindow implements ActionListener {
 	}
 
 	public void actionPerformed(ActionEvent e) {
+		mainApp.setCameraUrl(urlTextField.getText());
+
 		if (e.getActionCommand() == "START") {
-			if (liveViewThread == null) {
-				cameraUrl = urlTextField.getText();
-				System.out.println("Starting live view from " + cameraUrl);
-				try {
-					requester.start(cameraUrl);
-				} catch (IOException ex) {
-					ex.printStackTrace(System.err);
-				}
-				liveViewThread = new Thread() {
+			if (!liveviewStarted) {
+				mainApp.startLiveview(new MainApp.LiveviewUpdater() {
 					@Override
-					public void run() {
-						try {
-							while (runThread) {
-								imagePanel.update(requester);
-								mainPanel.repaint();
-							}
-						} catch (IOException ex) {
-							ex.printStackTrace(System.err);
-						}
-						System.out.println("Live view stopped");
+					public void update(LiveviewStreamer streamer) throws IOException {
+						imagePanel.update(streamer);
+						mainPanel.repaint();
 					}
-				};
-				runThread = true;
-				liveViewThread.start();
-				startButton.setText("Stop");
+				});
+				liveviewStarted = true;
 			} else {
-				System.out.println("Stopping live view");
-				runThread = false;
-				liveViewThread = null;
-				requester.stop();
-				startButton.setText("Start");
+				mainApp.stopLiveview();
+				liveviewStarted = false;
 			}
-		}
-
-		else if (e.getActionCommand() == "ZOOM-IN") {
-			try {
-				apiWrapper.makeRequest(cameraUrl, apiReq.zoomIn());
-			} catch (IOException ex) {
-				ex.printStackTrace(System.err);
-			}
+			updateStartButton();
+		} else if (e.getActionCommand() == "ZOOM-IN") {
+			mainApp.zoomIn();
 		} else if (e.getActionCommand() == "ZOOM-OUT") {
-			try {
-				apiWrapper.makeRequest(cameraUrl, apiReq.zoomOut());
-			} catch (IOException ex) {
-				ex.printStackTrace(System.err);
-			}
+			mainApp.zoomOut();
 		}
+	}
 
+	private void updateStartButton() {
+		if (liveviewStarted) {
+			startButton.setText("Stop");
+		} else {
+			startButton.setText("Start");
+		}
 	}
 }
