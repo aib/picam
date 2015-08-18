@@ -29,8 +29,8 @@ class LiveviewLimiter(object):
 			while True:
 				frame = frame + 1
 
+				data = read_one_video_frame(cam)
 				(ret, frame_data) = cam.read()
-				data = '' #TODO
 				size_str = struct.pack('!II', 0, len(data))
 
 				if frame % div != 0:
@@ -65,6 +65,9 @@ class LiveviewLimiter(object):
 			_logger.debug("Closing stream to %s", target)
 			handle.close()
 	lv._cp_config = {'response.stream': True}
+
+def read_one_video_frame(handle):
+	return ''
 
 def read_one_sony_frame(handle):
 	common_header = handle.read(8)
