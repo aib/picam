@@ -56,16 +56,6 @@ public class LiveviewPanel extends JPanel implements ActionListener {
 		startButton.addActionListener(this);
 		controls.add(startButton);
 
-		JButton zoomIn = new JButton("Zoom +");
-		zoomIn.setActionCommand("ZOOM-IN");
-		zoomIn.addActionListener(this);
-		controls.add(zoomIn);
-
-		JButton zoomOut = new JButton("Zoom -");
-		zoomOut.setActionCommand("ZOOM-OUT");
-		zoomOut.addActionListener(this);
-		controls.add(zoomOut);
-
 		return controls;
 	}
 
@@ -105,10 +95,6 @@ public class LiveviewPanel extends JPanel implements ActionListener {
 				liveviewStarted = false;
 			}
 			updateStartButton();
-		} else if (e.getActionCommand() == "ZOOM-IN") {
-			mainApp.zoomIn();
-		} else if (e.getActionCommand() == "ZOOM-OUT") {
-			mainApp.zoomOut();
 		}
 	}
 

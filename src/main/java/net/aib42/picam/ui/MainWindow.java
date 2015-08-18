@@ -34,6 +34,7 @@ public class MainWindow implements ActionListener {
 
 		mainPanel.add(setupUrlPanel());
 		mainPanel.add(setupViewPanel());
+		mainPanel.add(setupControls());
 
 		return mainPanel;
 	}
@@ -63,9 +64,34 @@ public class MainWindow implements ActionListener {
 		return urlPanel;
 	}
 
+	private JPanel setupControls() {
+		JPanel controls = new JPanel();
+		controls.setLayout(new BoxLayout(controls, BoxLayout.LINE_AXIS));
+
+		JButton zoomIn = new JButton("Zoom +");
+		zoomIn.setActionCommand("ZOOM-IN");
+		zoomIn.addActionListener(this);
+		controls.add(zoomIn);
+
+		JButton zoomOut = new JButton("Zoom -");
+		zoomOut.setActionCommand("ZOOM-OUT");
+		zoomOut.addActionListener(this);
+		controls.add(zoomOut);
+
+		return controls;
+	}
+
 	public void actionPerformed(ActionEvent e) {
 		if (e.getActionCommand() == "SET-URL") {
 			mainApp.setCameraUrl(urlTextField.getText());
+		}
+
+		else if (e.getActionCommand() == "ZOOM-IN") {
+			mainApp.zoomIn();
+		}
+
+		else if (e.getActionCommand() == "ZOOM-OUT") {
+			mainApp.zoomOut();
 		}
 	}
 }
