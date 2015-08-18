@@ -13,7 +13,7 @@ import net.aib42.picam.MainApp;
 import net.aib42.picam.qx30.LiveviewStreamer;
 
 @SuppressWarnings("serial")
-public class LiveViewPanel extends JPanel implements ActionListener {
+public class LiveviewPanel extends JPanel implements ActionListener {
 	private MainApp mainApp;
 	private String functionName;
 
@@ -22,7 +22,7 @@ public class LiveViewPanel extends JPanel implements ActionListener {
 
 	private boolean liveviewStarted = false;
 
-	public LiveViewPanel(MainApp mainApp, String functionName) {
+	public LiveviewPanel(MainApp mainApp, String functionName) {
 		this.mainApp = mainApp;
 		this.functionName = functionName;
 
