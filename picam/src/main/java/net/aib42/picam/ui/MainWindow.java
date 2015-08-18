@@ -47,7 +47,7 @@ public class MainWindow implements ActionListener {
 
 		viewPanel.add(new LiveviewPanel(mainApp, "lv"));
 		viewPanel.add(new LiveviewPanel(mainApp, "vc"));
-		viewPanel.add(new RecordingPanel(mainApp));
+//		viewPanel.add(new RecordingPanel(mainApp));
 
 		return viewPanel;
 	}
