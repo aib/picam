@@ -9,12 +9,39 @@ import struct
 import urllib2
 import sys
 import cherrypy
+import cv2
 
 base_url = sys.argv[1]
 listen_host = sys.argv[2]
 listen_port = int(sys.argv[3])
 
 class LiveviewLimiter(object):
+	@cherrypy.expose
+	def vc(self, div):
+		div = int(div)
+
+		try:
+			target = 0
+			_logger.debug("Opening video capture stream %i", target)
+			cam = cv2.VideoCapture(target)
+
+			frame = 0
+			while True:
+				frame = frame + 1
+
+				(ret, frame_data) = cam.read()
+				data = '' #TODO
+				size_str = struct.pack('!II', 0, len(data))
+
+				if frame % div != 0:
+					continue;
+
+				yield (size_str + data)
+		finally:
+			_logger.debug("Closing video capture stream %i", target)
+			cam.release()
+	vc._cp_config = {'response.stream': True}
+
 	@cherrypy.expose
 	def lv(self, div):
 		div = int(div)
