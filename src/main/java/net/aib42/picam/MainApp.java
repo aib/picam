@@ -1,6 +1,8 @@
 package net.aib42.picam;
 import java.io.IOException;
 
+import com.google.gson.JsonElement;
+
 import net.aib42.picam.qx30.ApiRequest;
 import net.aib42.picam.qx30.ApiWrapper;
 
@@ -54,6 +56,20 @@ public class MainApp {
 	public void stopRecording() {
 		try {
 			apiWrapper.makeRequest(cameraUrl, apiReq.stopRecording());
+		} catch (IOException ex) {
+			ex.printStackTrace(System.err);
+		}
+	}
+
+	public void getContentList() {
+		try {
+			JsonElement res = apiWrapper.makeRequest(cameraUrl, apiReq.getContentList(0));
+			if (res.getAsJsonObject().get("error") != null) {
+				System.err.println("Error fetching contents:");
+				System.err.println(res);
+			} else {
+				//TODO
+			}
 		} catch (IOException ex) {
 			ex.printStackTrace(System.err);
 		}
