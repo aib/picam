@@ -10,7 +10,7 @@ import urllib2
 import sys
 import cherrypy
 
-target = sys.argv[1]
+base_url = sys.argv[1]
 listen_host = sys.argv[2]
 listen_port = int(sys.argv[3])
 
@@ -20,6 +20,7 @@ class LiveviewLimiter(object):
 		div = int(div)
 
 		try:
+			target = base_url + "/liveview/liveviewstream"
 			_logger.debug("Opening stream to %s", target)
 			handle = urllib2.urlopen(target)
 			frame = 0
