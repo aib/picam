@@ -6,7 +6,6 @@ import java.util.List;
 public class ApiRequest {
 	private static final String CAMERA_ENDPOINT = "sony/camera";
 
-	private String version = "1.0";
 	private int id = 1;
 
 	public static class Request {
@@ -25,7 +24,7 @@ public class ApiRequest {
 		return Arrays.asList(params);
 	}
 
-	public Request.Body createBody(String method, List<Object> params) {
+	public Request.Body createBody(String version, String method, List<Object> params) {
 		Request.Body body = new Request.Body();
 		body.version = version;
 		body.id = id;
@@ -42,10 +41,10 @@ public class ApiRequest {
 	}
 
 	public Request zoomIn() {
-		return createRequest(CAMERA_ENDPOINT, createBody("actZoom", asParams("in", "1shot")));
+		return createRequest(CAMERA_ENDPOINT, createBody("1.0", "actZoom", asParams("in", "1shot")));
 	}
 
 	public Request zoomOut() {
-		return createRequest(CAMERA_ENDPOINT, createBody("actZoom", asParams("out", "1shot")));
+		return createRequest(CAMERA_ENDPOINT, createBody("1.0", "actZoom", asParams("out", "1shot")));
 	}
 }
