@@ -8,12 +8,22 @@ import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.JList;
 import javax.swing.JPanel;
+import javax.swing.ListSelectionModel;
 
 import net.aib42.picam.MainApp;
 
 @SuppressWarnings("serial")
 public class RecordingPanel extends JPanel implements ActionListener {
+	public class Recording {
+		@Override
+		public String toString() {
+			return "FIXME"; //FIXME
+		}
+	}
+
 	private MainApp mainApp;
+	private DefaultListModel<Recording> recordings;
+	private JList<Recording> recordingsList;
 
 	public RecordingPanel(MainApp mainApp) {
 		this.mainApp = mainApp;
@@ -21,8 +31,9 @@ public class RecordingPanel extends JPanel implements ActionListener {
 		BoxLayout layout = new BoxLayout(this, BoxLayout.PAGE_AXIS);
 		this.setLayout(layout);
 
-		DefaultListModel<String> recordings = new DefaultListModel<String>();
-		JList<String> recordingsList = new JList<String>(recordings);
+		recordings = new DefaultListModel<Recording>();
+		recordingsList = new JList<Recording>(recordings);
+		recordingsList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		this.add(recordingsList);
 
 		JPanel buttons = new JPanel();
@@ -34,15 +45,15 @@ public class RecordingPanel extends JPanel implements ActionListener {
 		buttons.add(refresh);
 
 		JButton play = new JButton("Play");
-		refresh.setActionCommand("PLAY");
-		refresh.addActionListener(this);
+		play.setActionCommand("PLAY");
+		play.addActionListener(this);
 		buttons.add(play);
 
 		this.add(buttons);
 
 		//FIXME
 		for (int i=0; i<10; ++i) {
-			recordings.addElement(String.format("%04d", i));
+			recordings.addElement(new Recording());
 		}
 	}
 
@@ -50,10 +61,15 @@ public class RecordingPanel extends JPanel implements ActionListener {
 	public void actionPerformed(ActionEvent e) {
 		if (e.getActionCommand() == "REFRESH") {
 			//TODO
+//			mainApp.getContentList();
 		}
 
 		else if (e.getActionCommand() == "PLAY") {
-			//TODO
+			int index = recordingsList.getSelectedIndex();
+			if (index != -1) {
+				Recording r = recordings.get(index);
+				System.out.println(r); //TODO
+			}
 		}
 	}
 }
