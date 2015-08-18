@@ -15,6 +15,16 @@ public class LiveviewStreamer {
 	private HttpGet currentRequest;
 	private InputStreamBlockingReader isReader;
 
+	public static class JpegPayload {
+		public long timestamp;
+		public byte[] bytes;
+
+		public JpegPayload(long timestamp, byte[] bytes) {
+			this.timestamp = timestamp;
+			this.bytes = bytes;
+		}
+	}
+
 	public LiveviewStreamer() {
 		httpClient = HttpClients.createDefault();
 		currentRequest = null;
@@ -40,20 +50,18 @@ public class LiveviewStreamer {
 		currentRequest = null;
 	}
 
-	public byte[] getNextJpegBytes() throws IOException {
-		byte[] commonHeader = new byte[8];
-		byte[] payloadHeader = new byte[128];
-		isReader.read(commonHeader);
-		isReader.read(payloadHeader);
+	public JpegPayload getNextJpeg() throws IOException {
+		byte[] header = new byte[12];
+		isReader.read(header);
 
-		int dataSize = NetworkByteOrder.bytesToInt((byte) 0, payloadHeader[4], payloadHeader[5], payloadHeader[6]);
-		int paddingSize = payloadHeader[7] & 0xFF;
+		long timestamp = NetworkByteOrder.bytesToLong(
+			header[0], header[1], header[2], header[3], header[4], header[5], header[6], header[7]);
+		int dataSize = NetworkByteOrder.bytesToInt(header[8], header[9], header[10], header[11]);
 
 		byte[] data = new byte[dataSize];
-		byte[] padding = new byte[paddingSize];
 		isReader.read(data);
-		isReader.read(padding);
 
-		return data;
+		return new JpegPayload(timestamp, data);
+	}
 	}
 }
