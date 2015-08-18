@@ -24,7 +24,7 @@ class LiveviewLimiter(object):
 		while True:
 			frame = frame + 1
 
-			(data,) = read_one_frame(h)
+			(data, timestamp) = read_one_frame(handle)
 			size_str = struct.pack('!I', len(data))
 
 			if frame % div != 0:
@@ -37,12 +37,14 @@ def read_one_frame(handle):
 	common_header = handle.read(8)
 	payload_header = handle.read(128)
 
+	timestamp = (ord(common_header[4]) << 24) | (ord(common_header[5]) << 16) | (ord(common_header[6]) << 8) | (ord(common_header[7]) << 0)
 	data_size = (ord(payload_header[4]) << 16) | (ord(payload_header[5]) << 8) | ord(payload_header[6])
 	padding_size = ord(payload_header[7])
 
 	data = handle.read(data_size)
 	padding = handle.read(padding_size)
-	return (data,)
+
+	return (data, timestamp)
 
 def main():
 	cherrypy.config.update(
