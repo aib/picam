@@ -18,19 +18,24 @@ class LiveviewLimiter(object):
 	@cherrypy.expose
 	def lv(self, div):
 		div = int(div)
-		h = urllib2.urlopen(target)
 
-		frame = 0
-		while True:
-			frame = frame + 1
+		try:
+			_logger.debug("Opening stream to %s", target)
+			handle = urllib2.urlopen(target)
+			frame = 0
+			while True:
+				frame = frame + 1
 
-			(data, timestamp) = read_one_frame(handle)
-			size_str = struct.pack('!I', len(data))
+				(data, timestamp) = read_one_frame(handle)
+				size_str = struct.pack('!II', timestamp, len(data))
 
-			if frame % div != 0:
-				continue
+				if frame % div != 0:
+					continue
 
-			yield (size_str + data)
+				yield (size_str + data)
+		finally:
+			_logger.debug("Closing stream to %s", target)
+			handle.close()
 	lv._cp_config = {'response.stream': True}
 
 def read_one_frame(handle):
