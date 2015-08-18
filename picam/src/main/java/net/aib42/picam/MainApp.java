@@ -47,6 +47,7 @@ public class MainApp {
 
 	public void startRecording() {
 		try {
+			apiWrapper.makeRequest(cameraUrl, apiReq.setShootMode("movie"));
 			apiWrapper.makeRequest(cameraUrl, apiReq.startRecording());
 		} catch (IOException ex) {
 			ex.printStackTrace(System.err);
