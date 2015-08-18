@@ -1,10 +1,13 @@
 package net.aib42.picam.qx30;
 
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class ApiRequest {
 	private static final String CAMERA_ENDPOINT = "sony/camera";
+	private static final String CONTENT_ENDPOINT = "sony/avContent";
 
 	private int id = 1;
 
@@ -46,5 +49,23 @@ public class ApiRequest {
 
 	public Request zoomOut() {
 		return createRequest(CAMERA_ENDPOINT, createBody("1.0", "actZoom", asParams("out", "1shot")));
+	}
+
+	public Request getContentList(int startIndex) {
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("uri", "storage:memoryCard1");
+		params.put("stIdx", startIndex);
+		params.put("cnt", 1);
+		params.put("view", "date");
+		params.put("sort", "descending");
+
+		return createRequest(
+			CONTENT_ENDPOINT,
+			createBody(
+				"1.3",
+				"getContentList",
+				asParams(params)
+			)
+		);
 	}
 }
