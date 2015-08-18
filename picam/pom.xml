@@ -24,7 +24,7 @@
         <configuration>
           <archive>
             <manifest>
-              <mainClass>net.aib42.picam2.ui.Driver</mainClass>
+              <mainClass>net.aib42.picam.ui.Driver</mainClass>
             </manifest>
           </archive>
         </configuration>
