@@ -28,6 +28,10 @@ public class MainApp {
 		runThread = false;
 	}
 
+	public String getVersionString() {
+		return "0.0.3";
+	}
+
 	public String getCameraUrl() {
 		return cameraUrl;
 	}
