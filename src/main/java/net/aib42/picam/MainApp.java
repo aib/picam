@@ -40,10 +40,10 @@ public class MainApp {
 		this.cameraUrl = cameraUrl;
 	}
 
-	public void startLiveview(final LiveviewUpdater lvUpdater) {
+	public void startLiveview(final LiveviewUpdater lvUpdater, String functionName) {
 		System.out.println("Starting live view from " + cameraUrl);
 		try {
-			streamer.start(cameraUrl);
+			streamer.start(cameraUrl, functionName);
 		} catch (IOException ex) {
 			ex.printStackTrace(System.err);
 		}

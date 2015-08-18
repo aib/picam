@@ -33,12 +33,12 @@ public class LiveviewStreamer {
 		currentRequest = null;
 	}
 
-	public void start(String url) throws IllegalStateException, IOException {
+	public void start(String url, String functionName) throws IllegalStateException, IOException {
 		if (currentRequest != null) {
 			throw new IllegalStateException("Already started");
 		}
 
-		currentRequest = new HttpGet(url + "/vproxy/vc?div=10");
+		currentRequest = new HttpGet(url + "/vproxy/" + functionName + "?div=10");
 		HttpResponse response = httpClient.execute(currentRequest);
 		InputStream responseInputStream = response.getEntity().getContent();
 		isReader = new InputStreamBlockingReader(responseInputStream);

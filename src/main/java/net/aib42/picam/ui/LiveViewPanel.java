@@ -65,7 +65,7 @@ public class LiveViewPanel extends JPanel implements ActionListener {
 					public void update(LiveviewStreamer streamer) throws IOException {
 						liveviewImagePanel.update(streamer);
 					}
-				});
+				}, "lv");
 				liveviewStarted = true;
 			} else {
 				mainApp.stopLiveview();
