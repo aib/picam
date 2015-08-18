@@ -15,8 +15,8 @@ public class LiveviewImagePanel extends JPanel {
 	BufferedImage image;
 
 	protected void update(LiveviewStreamer lvs) throws IOException {
-		byte[] jpegBytes = lvs.getNextJpegBytes();
-		image = ImageIO.read(new ByteArrayInputStream(jpegBytes));
+		LiveviewStreamer.JpegPayload payload = lvs.getNextJpeg();
+		image = ImageIO.read(new ByteArrayInputStream(payload.bytes));
 		repaint();
 	}
 
