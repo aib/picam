@@ -11,10 +11,13 @@ import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonParser;
 
 public class ApiWrapper {
 	private HttpClient httpClient;
 	private Gson gson;
+	private JsonParser parser;
 
 	@SuppressWarnings("serial")
 	public static class InvalidStatusCodeException extends IOException {
@@ -26,9 +29,10 @@ public class ApiWrapper {
 	public ApiWrapper() {
 		httpClient = HttpClients.createDefault();
 		gson = new Gson();
+		parser = new JsonParser();
 	}
 
-	public String makeRequest(String cameraUrl, ApiRequest.Request request) throws IOException {
+	public JsonElement makeRequest(String cameraUrl, ApiRequest.Request request) throws IOException {
 		String url = cameraUrl + "/" + request.endpoint;
 		String body = gson.toJson(request.body);
 
@@ -42,6 +46,6 @@ public class ApiWrapper {
 			throw new InvalidStatusCodeException(responseStatusCode);
 		}
 
-		return responseBody;
+		return parser.parse(responseBody);
 	}
 }
