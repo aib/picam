@@ -74,13 +74,13 @@ public class LiveviewStreamer {
 		return new JpegPayload(timestamp, data);
 	}
 
-	public Long getLag(JpegPayload payload) {
+	public Long getLag(long timestamp) {
 		if (firstFrameTimestamp == null || firstFrameTime == null) {
 			return null;
 		}
 
 		long deltaTime = System.currentTimeMillis() - firstFrameTime;
-		long deltaTimestamp = payload.timestamp - firstFrameTimestamp;
+		long deltaTimestamp = timestamp - firstFrameTimestamp;
 		return deltaTime - deltaTimestamp;
 	}
 }
