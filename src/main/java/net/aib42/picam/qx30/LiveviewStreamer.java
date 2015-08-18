@@ -15,6 +15,9 @@ public class LiveviewStreamer {
 	private HttpGet currentRequest;
 	private InputStreamBlockingReader isReader;
 
+	private Long firstFrameTimestamp;
+	private Long firstFrameTime;
+
 	public static class JpegPayload {
 		public long timestamp;
 		public byte[] bytes;
@@ -39,6 +42,8 @@ public class LiveviewStreamer {
 		HttpResponse response = httpClient.execute(currentRequest);
 		InputStream responseInputStream = response.getEntity().getContent();
 		isReader = new InputStreamBlockingReader(responseInputStream);
+		firstFrameTimestamp = null;
+		firstFrameTime = null;
 	}
 
 	public void stop() {
@@ -61,7 +66,21 @@ public class LiveviewStreamer {
 		byte[] data = new byte[dataSize];
 		isReader.read(data);
 
+		if (firstFrameTimestamp == null || firstFrameTime == null) {
+			firstFrameTimestamp = timestamp;
+			firstFrameTime = System.currentTimeMillis();
+		}
+
 		return new JpegPayload(timestamp, data);
 	}
+
+	public Long getLag(JpegPayload payload) {
+		if (firstFrameTimestamp == null || firstFrameTime == null) {
+			return null;
+		}
+
+		long deltaTime = System.currentTimeMillis() - firstFrameTime;
+		long deltaTimestamp = payload.timestamp - firstFrameTimestamp;
+		return deltaTime - deltaTimestamp;
 	}
 }
