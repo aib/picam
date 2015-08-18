@@ -61,7 +61,7 @@ public class RecordingPanel extends JPanel implements ActionListener {
 	public void actionPerformed(ActionEvent e) {
 		if (e.getActionCommand() == "REFRESH") {
 			//TODO
-//			mainApp.getContentList();
+			mainApp.getContentList();
 		}
 
 		else if (e.getActionCommand() == "PLAY") {

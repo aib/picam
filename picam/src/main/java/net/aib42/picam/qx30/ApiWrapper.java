@@ -36,11 +36,15 @@ public class ApiWrapper {
 		String url = cameraUrl + "/" + request.endpoint;
 		String body = gson.toJson(request.body);
 
+		System.out.println(body);
+
 		HttpPost post = new HttpPost(url);
 		post.setEntity(new StringEntity(body, StandardCharsets.UTF_8));
 		HttpResponse response = httpClient.execute(post);
 		int responseStatusCode = response.getStatusLine().getStatusCode();
 		String responseBody = EntityUtils.toString(response.getEntity());
+
+		System.out.println(responseBody);
 
 		if (responseStatusCode != 200) {
 			throw new InvalidStatusCodeException(responseStatusCode);
