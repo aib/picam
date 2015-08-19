@@ -45,21 +45,29 @@ public class MainApp {
 		}
 	}
 
-	public void startRecording() {
+	public boolean startRecording() {
 		try {
 			apiWrapper.makeRequest(cameraUrl, apiReq.setShootMode("movie"));
-			apiWrapper.makeRequest(cameraUrl, apiReq.startRecording());
+			JsonElement res = apiWrapper.makeRequest(cameraUrl, apiReq.startRecording());
+			if (res.getAsJsonObject().get("result") != null) {
+				return true;
+			}
 		} catch (IOException ex) {
 			ex.printStackTrace(System.err);
 		}
+		return false;
 	}
 
-	public void stopRecording() {
+	public boolean stopRecording() {
 		try {
-			apiWrapper.makeRequest(cameraUrl, apiReq.stopRecording());
+			JsonElement res = apiWrapper.makeRequest(cameraUrl, apiReq.stopRecording());
+			if (res.getAsJsonObject().get("result") != null) {
+				return true;
+			}
 		} catch (IOException ex) {
 			ex.printStackTrace(System.err);
 		}
+		return false;
 	}
 
 	public void getContentList() {
