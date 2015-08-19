@@ -2,7 +2,7 @@
 
 import logger
 logger.config(10)
-_logger = logger.getLogger("lvlimit")
+_logger = logger.getLogger("prox")
 _logger.info("Initializing")
 
 import struct
