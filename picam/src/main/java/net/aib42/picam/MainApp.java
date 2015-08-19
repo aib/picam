@@ -18,7 +18,7 @@ public class MainApp {
 	}
 
 	public String getVersionString() {
-		return "0.0.3";
+		return "0.1.0";
 	}
 
 	public String getCameraUrl() {
