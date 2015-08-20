@@ -1,0 +1,2 @@
+[drone]
+188.59.135.36 ansible_ssh_user=pi
