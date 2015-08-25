@@ -1,0 +1,40 @@
+---
+- hosts: drone
+  tasks:
+    - name: install packages
+      sudo: yes
+      apt: name={{ item }} state=latest
+      with_items:
+        - python
+        - python-pip
+        - supervisor
+        - nginx-light
+        - python-opencv
+
+    - name: install pip packages
+      sudo: yes
+      pip: name={{ item }} state=latest
+      with_items:
+        - cherrypy
+
+    - name: copy project directory
+      synchronize: src=../../picam dest=/home/pi delete=yes copy_links=yes
+
+    - name: copy wpa_supplicant configuration
+      sudo: yes
+      copy: src=../config/wpa_supplicant.conf dest=/etc/wpa_supplicant/wpa_supplicant.conf
+
+    - name: copy nginx configuration
+      sudo: yes
+      copy: src=../config/nginx-proxy.conf dest=/etc/nginx/conf.d/proxy.conf
+
+    - name: copy supervisor configuration
+      sudo: yes
+      copy: src=../config/supervisor-prox.conf dest=/etc/supervisor/conf.d/prox.conf
+
+    - name: restart services
+      sudo: yes
+      service: name={{ item }} state=restarted
+      with_items:
+        - nginx
+        - supervisor
